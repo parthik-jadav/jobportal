@@ -1,0 +1,1 @@
+<?php require '../config/database.php'; require '../includes/auth.php'; require_student(); $job_id=(int)($_POST['job_id']??0);$pdo->prepare('DELETE FROM saved_jobs WHERE user_id=? AND job_id=?')->execute([$_SESSION['user']['id'],$job_id]);flash('success','Job removed from saved jobs.');header('Location: ../student/saved-jobs.php');

@@ -1,0 +1,23 @@
+# Environment-specific database settings
+config/database.local.php
+.env
+.env.*
+!.env.example
+
+# PHP dependencies and tooling
+/vendor/
+/.phpunit.result.cache
+
+# Runtime and local files
+/logs/
+/tmp/
+/uploads/
+*.log
+
+# Editor and operating-system files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

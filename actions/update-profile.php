@@ -1,0 +1,2 @@
+<?php require '../config/database.php'; require '../includes/auth.php'; require_student();
+$name=trim($_POST['name']??''); if($name){$pdo->prepare('UPDATE users SET name=?,phone=?,education=?,skills=? WHERE id=?')->execute([$name,trim($_POST['phone']??''),trim($_POST['education']??''),trim($_POST['skills']??''),$_SESSION['user']['id']]);$_SESSION['user']['name']=$name;flash('success','Profile updated successfully.');} header('Location: ../student/profile.php');

@@ -47,7 +47,7 @@ include '../includes/header.php';
                 <div class="list-group list-group-flush text-start small">
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0 border-bottom">
                         <span class="text-muted"><i class="bi bi-mortarboard text-primary me-2"></i>Education</span>
-                        <span class="fw-semibold text-truncate" style="max-width:160px;"><?= htmlspecialchars($user['education'] ?: 'Not set') ?></span>
+                        <span class="fw-semibold text-end" style="max-width:200px;"><?= htmlspecialchars($user['education'] ?: 'Not set') ?></span>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0 border-bottom">
                         <span class="text-muted"><i class="bi bi-telephone text-primary me-2"></i>Phone</span>

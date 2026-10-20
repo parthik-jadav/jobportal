@@ -25,7 +25,7 @@ include '../includes/header.php';
                 <div class="d-flex align-items-center gap-4">
                     <div class="company-logo-placeholder"><?= htmlspecialchars($companyInitials) ?></div>
                     <div>
-                        <h2 class="fw-bold mb-1" style="font-size:1.4rem;"><?= htmlspecialchars($companyName) ?></h2>
+                        <h2 class="fw-bold mb-1 text-white" style="font-size:1.5rem;"><?= htmlspecialchars($companyName) ?></h2>
                         <div style="color:rgba(255,255,255,.6);font-size:.875rem;">
                             <i class="bi bi-envelope me-1"></i><?= htmlspecialchars($emp['email']) ?>
                             <?php if (!empty($emp['company_website'])): ?>

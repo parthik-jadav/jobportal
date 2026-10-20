@@ -84,7 +84,7 @@ include '../includes/header.php';
                                 </div>
                             </td>
                             <td>
-                                <span class="badge px-2 py-1 fw-semibold text-capitalize" style="background:<?= $roleBadge['bg'] ?>;color:<?= $roleBadge['text'] ?>;font-size:.72rem;">
+                                <span class="badge rounded-pill px-2.5 py-1 fw-semibold text-capitalize" style="background:<?= $roleBadge['bg'] ?>;color:<?= $roleBadge['text'] ?>;font-size:.72rem;">
                                     <?= htmlspecialchars($u['role']) ?>
                                 </span>
                             </td>
@@ -104,29 +104,29 @@ include '../includes/header.php';
                             <td><div class="text-muted small"><?= date('M d, Y', strtotime($u['created_at'])) ?></div></td>
                             <td>
                                 <?php if ($u['status'] === 'active'): ?>
-                                    <span class="badge px-2 py-1 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.72rem;">Active</span>
+                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.72rem;">Active</span>
                                 <?php else: ?>
-                                    <span class="badge px-2 py-1 fw-semibold" style="background:#ffe4e6;color:#9f1239;font-size:.72rem;">Suspended</span>
+                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background:#ffe4e6;color:#9f1239;font-size:.72rem;">Suspended</span>
                                 <?php endif; ?>
                             </td>
                             <td class="pe-4 text-end">
                                 <?php if (!$isSelf): ?>
-                                    <div class="d-inline-flex gap-1">
+                                    <div class="d-inline-flex gap-1.5 align-items-center">
                                         <form action="../actions/toggle-user-status.php" method="post" class="d-inline">
                                             <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
-                                            <button class="btn btn-outline-secondary btn-sm fw-semibold" style="font-size:.72rem;" title="Suspend or Activate">
+                                            <button class="btn btn-outline-secondary table-btn" style="font-size:.72rem;" title="Suspend or Activate">
                                                 <?= $u['status'] === 'active' ? 'Suspend' : 'Activate' ?>
                                             </button>
                                         </form>
                                         <form action="../actions/delete-user.php" method="post" class="d-inline">
                                             <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
-                                            <button class="btn btn-outline-danger btn-sm" style="font-size:.72rem;" onclick="return confirm('Permanently delete this user account?');" title="Delete account">
+                                            <button class="table-btn-icon text-danger border-danger" style="font-size:.75rem;" onclick="return confirm('Permanently delete this user account?');" title="Delete account">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
                                     </div>
                                 <?php else: ?>
-                                    <span class="badge" style="background:#f1f5f9;color:#64748b;font-size:.72rem;">Current User</span>
+                                    <span class="badge rounded-pill" style="background:#f1f5f9;color:#64748b;font-size:.72rem;">Current User</span>
                                 <?php endif; ?>
                             </td>
                         </tr>

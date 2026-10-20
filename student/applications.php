@@ -155,13 +155,13 @@ include '../includes/header.php';
                                 </div>
                             </td>
                             <td>
-                                <span class="badge px-3 py-1 fw-semibold" style="background:<?= $badge['bg'] ?>;color:<?= $badge['text'] ?>;font-size:.78rem;">
+                                <span class="badge px-3 py-1 fw-semibold" style="background:<?= $badge['bg'] ?>;color:<?= $badge['text'] ?>;font-size:.78rem;border-radius:var(--radius-pill);">
                                     <i class="bi <?= $badge['icon'] ?> me-1"></i><?= $badge['label'] ?>
                                 </span>
                             </td>
                             <td>
                                 <?php if (!empty($app['resume_path'])): ?>
-                                    <a href="<?= $base_path . htmlspecialchars($app['resume_path']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary fw-semibold" style="font-size:.72rem;">
+                                    <a href="<?= $base_path . htmlspecialchars($app['resume_path']) ?>" target="_blank" class="table-btn btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-file-earmark-pdf text-danger me-1"></i>Resume
                                     </a>
                                 <?php else: ?>
@@ -169,7 +169,7 @@ include '../includes/header.php';
                                 <?php endif; ?>
                             </td>
                             <td class="pe-4 text-end">
-                                <button type="button" class="btn btn-sm btn-outline-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#appDetailModal<?= $app['id'] ?>" style="font-size:.78rem;">
+                                <button type="button" class="table-btn btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#appDetailModal<?= $app['id'] ?>">
                                     <i class="bi bi-info-circle me-1"></i>Details
                                 </button>
                             </td>
@@ -262,7 +262,7 @@ include '../includes/header.php';
                         <?php endif; ?>
                     </div>
                     <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" style="border-radius:var(--radius-pill);padding:0.35rem 1.4rem;" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

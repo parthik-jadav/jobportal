@@ -209,25 +209,28 @@ include '../includes/header.php';
                         <?php if ($isSaved): ?>
                             <form action="../actions/remove-job.php" method="post" class="d-inline">
                                 <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                <button class="btn btn-sm btn-outline-danger fw-semibold">
-                                    <i class="bi bi-bookmark-fill me-1"></i>Saved
+                                <button class="btn btn-sm btn-saved table-btn">
+                                    <i class="bi bi-bookmark-check-fill me-1"></i>Saved
                                 </button>
                             </form>
                         <?php else: ?>
                             <form action="../actions/save-job.php" method="post" class="d-inline">
                                 <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                <button class="btn btn-sm btn-outline-secondary fw-semibold">
+                                <button class="btn btn-sm btn-outline-secondary table-btn">
                                     <i class="bi bi-bookmark me-1"></i>Save
                                 </button>
                             </form>
                         <?php endif; ?>
 
-                        <?php if ($isApplied): ?>
-                            <span class="btn btn-sm btn-success disabled fw-semibold">
-                                <i class="bi bi-check-circle-fill me-1"></i>Applied (<?= ucfirst($appliedJobs[$job['id']]) ?>)
+                        <?php if ($isApplied):
+                            $rawSt = $appliedJobs[$job['id']];
+                            $stLabel = strtolower($rawSt) === 'applied' ? 'Applied' : ucfirst($rawSt);
+                        ?>
+                            <span class="badge px-3 py-2 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.78rem;border-radius:var(--radius-pill);">
+                                <i class="bi bi-check-circle-fill me-1"></i><?= $stLabel ?>
                             </span>
                         <?php else: ?>
-                            <button type="button" class="btn btn-primary btn-sm px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#applyModal<?= $job['id'] ?>">
+                            <button type="button" class="btn btn-primary btn-sm px-3 fw-semibold" style="border-radius:var(--radius-pill);" data-bs-toggle="modal" data-bs-target="#applyModal<?= $job['id'] ?>">
                                 <i class="bi bi-send me-1"></i>Apply Now
                             </button>
                         <?php endif; ?>
@@ -287,8 +290,8 @@ include '../includes/header.php';
                                 </div>
                             </div>
                             <div class="modal-footer border-0 pt-0">
-                                <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary btn-sm px-4 fw-semibold">
+                                <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" style="border-radius:var(--radius-pill);" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-sm px-4 fw-semibold" style="border-radius:var(--radius-pill);">
                                     <i class="bi bi-send me-1"></i>Submit Application
                                 </button>
                             </div>

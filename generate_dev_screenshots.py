@@ -7,11 +7,11 @@ BASE_URL = "http://localhost/jobportal"
 CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "screenshots")
 
-# Ensure clean directory
+# Ensure clean directory (remove old png screenshots)
 if os.path.exists(OUTPUT_DIR):
     for f in os.listdir(OUTPUT_DIR):
         file_path = os.path.join(OUTPUT_DIR, f)
-        if os.path.isfile(file_path):
+        if os.path.isfile(file_path) and f.endswith(".png"):
             os.unlink(file_path)
 else:
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -37,31 +37,31 @@ def run():
         ctx_pub = browser.new_context(viewport={"width": 1920, "height": 1080})
         page = ctx_pub.new_page()
 
-        page.goto(f"{BASE_URL}/index.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/index.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "01_public_home.png", "Homepage Landing Page with Live Stats & Featured Openings")
 
-        page.goto(f"{BASE_URL}/features.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/features.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "02_public_features.png", "Platform Features Breakdown for Students, Employers & Admin")
 
-        page.goto(f"{BASE_URL}/about.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/about.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "03_public_about.png", "About Page")
 
-        page.goto(f"{BASE_URL}/contact.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/contact.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "04_public_contact.png", "Contact & Feedback Form")
 
-        page.goto(f"{BASE_URL}/login.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/login.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "05_public_login.png", "Unified Login (Student, Employer, Admin)")
 
-        page.goto(f"{BASE_URL}/register.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/register.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "06_public_register_student_employer.png", "Dual-Role Registration (Student & Employer)")
 
-        page.goto(f"{BASE_URL}/admin/login.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/admin/login.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "07_public_admin_login.png", "Administrator Sign-in Form")
 
@@ -75,16 +75,16 @@ def run():
         page = ctx_stu.new_page()
 
         # Login as student
-        page.goto(f"{BASE_URL}/login.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/login.php", wait_until="load")
         page.fill('input[name="email"]', "demo@demo.com")
         page.fill('input[name="password"]', "student123")
         page.click('button:has-text("Log in"), button[type="submit"]')
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("load")
         time.sleep(0.5)
 
         capture(page, "08_student_dashboard.png", "Student Dashboard (Metrics, Recent Apps, Recommendations)")
 
-        page.goto(f"{BASE_URL}/student/jobs.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/student/jobs.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "09_student_jobs_catalog.png", "Job Search & Multi-Faceted Filters (Type, Category, Exp, Sort)")
 
@@ -99,7 +99,7 @@ def run():
                 close_btn.click()
                 time.sleep(0.4)
 
-        page.goto(f"{BASE_URL}/student/applications.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/student/applications.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "11_student_applications.png", "Live Student Application Tracker with Status Badges")
 
@@ -114,15 +114,15 @@ def run():
                 close_modal.click()
                 time.sleep(0.4)
 
-        page.goto(f"{BASE_URL}/student/saved-jobs.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/student/saved-jobs.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "13_student_saved_jobs.png", "Saved Opportunities (Bookmarks & One-Click Apply)")
 
-        page.goto(f"{BASE_URL}/student/profile.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/student/profile.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "14_student_profile_resume.png", "Student Profile, Skills & Active PDF Resume on File")
 
-        page.goto(f"{BASE_URL}/student/notifications.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/student/notifications.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "15_student_notifications.png", "Real-Time Candidate Notification Center")
 
@@ -136,20 +136,20 @@ def run():
         page = ctx_emp.new_page()
 
         # Login as employer
-        page.goto(f"{BASE_URL}/login.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/login.php", wait_until="load")
         page.fill('input[name="email"]', "employer@jobportal.test")
         page.fill('input[name="password"]', "employer123")
         page.click('button:has-text("Log in"), button[type="submit"]')
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("load")
         time.sleep(0.5)
 
         capture(page, "16_employer_dashboard.png", "Employer Recruiter Dashboard (KPIs, Activity, Pipeline)")
 
-        page.goto(f"{BASE_URL}/employer/post-job.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/employer/post-job.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "17_employer_post_job.png", "Job Opening Creation Form (Category, Salary, Deadline, Featured)")
 
-        page.goto(f"{BASE_URL}/employer/manage-jobs.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/employer/manage-jobs.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "18_employer_manage_jobs.png", "Manage Job Listings (Status Toggles, Applicant Counts)")
 
@@ -157,15 +157,15 @@ def run():
         edit_link = page.locator('a[title="Edit Job"]').first
         if edit_link.count() > 0:
             edit_link.click()
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
             time.sleep(0.5)
             capture(page, "19_employer_edit_job.png", "Edit Job Opening Details Form")
 
-        page.goto(f"{BASE_URL}/employer/applicants.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/employer/applicants.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "20_employer_applicants_pipeline.png", "Candidate Review Pipeline (Resume Download, Status Update & Notes)")
 
-        page.goto(f"{BASE_URL}/employer/profile.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/employer/profile.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "21_employer_profile.png", "Company Profile & Recruiter Contact Management")
 
@@ -179,16 +179,16 @@ def run():
         page = ctx_adm.new_page()
 
         # Login as admin
-        page.goto(f"{BASE_URL}/admin/login.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/admin/login.php", wait_until="load")
         page.fill('input[name="email"]', "admin@jobportal.test")
         page.fill('input[name="password"]', "admin123")
         page.click('button:has-text("Log in as admin"), button[type="submit"]')
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("load")
         time.sleep(0.5)
 
         capture(page, "22_admin_dashboard.png", "Executive Administrator Dashboard (KPIs & Global Activity)")
 
-        page.goto(f"{BASE_URL}/admin/jobs.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/admin/jobs.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "23_admin_jobs_moderation.png", "Global Job Moderation (Featured Badges, Open/Close, Delete)")
 
@@ -203,15 +203,15 @@ def run():
                 close_adm_modal.click()
                 time.sleep(0.4)
 
-        page.goto(f"{BASE_URL}/admin/users.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/admin/users.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "25_admin_users_management.png", "User Account Governance (Role Filters, Suspend & Activate)")
 
-        page.goto(f"{BASE_URL}/admin/feedback.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/admin/feedback.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "26_admin_feedback_inbox.png", "User Feedback & Inquiry Inbox")
 
-        page.goto(f"{BASE_URL}/admin/reports.php", wait_until="networkidle")
+        page.goto(f"{BASE_URL}/admin/reports.php", wait_until="load")
         time.sleep(0.5)
         capture(page, "27_admin_reports_analytics.png", "Analytics Reports, Candidate Funnel & CSV Data Exports")
 

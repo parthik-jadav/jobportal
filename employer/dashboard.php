@@ -58,21 +58,21 @@ include '../includes/header.php';
             <div class="col-lg-8 d-flex align-items-center gap-4">
                 <div class="company-logo-placeholder"><?= htmlspecialchars($companyInitials) ?></div>
                 <div>
-                    <div class="portal-badge" style="background:rgba(245,158,11,.2);color:#fcd34d;border-color:rgba(245,158,11,.3);">Employer Hub</div>
-                    <h1 class="fw-bold mb-1" style="font-size:1.6rem;"><?= htmlspecialchars($companyName) ?></h1>
-                    <div style="color:rgba(255,255,255,.6);font-size:.875rem;">
+                    <span class="portal-badge"><i class="bi bi-building me-1"></i>Employer Hub</span>
+                    <h1 class="fw-bold mb-1 text-white" style="font-size:1.65rem;"><?= htmlspecialchars($companyName) ?></h1>
+                    <div style="color:rgba(255,255,255,.75);font-size:.875rem;">
                         <i class="bi bi-envelope me-1"></i><?= htmlspecialchars($employer['email']) ?>
                         <?php if (!empty($employer['company_website'])): ?>
-                            &bull; <i class="bi bi-globe me-1"></i><a href="<?= htmlspecialchars($employer['company_website']) ?>" target="_blank" style="color:rgba(255,255,255,.6);"><?= htmlspecialchars($employer['company_website']) ?></a>
+                            &bull; <i class="bi bi-globe me-1"></i><a href="<?= htmlspecialchars($employer['company_website']) ?>" target="_blank" style="color:rgba(255,255,255,.75);"><?= htmlspecialchars($employer['company_website']) ?></a>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 mt-3 mt-lg-0 d-flex gap-2 justify-content-lg-end flex-wrap">
-                <a href="post-job.php" class="btn fw-bold px-4" style="background:var(--brand-accent);color:#1c1917;border:none;">
+                <a href="post-job.php" class="btn btn-primary fw-bold px-4 shadow-sm" style="border-radius:var(--radius-pill);">
                     <i class="bi bi-plus-circle me-1"></i>Post a Job
                 </a>
-                <a href="manage-jobs.php" class="btn fw-semibold px-3" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);">
+                <a href="manage-jobs.php" class="btn btn-outline-light fw-semibold px-3" style="border-radius:var(--radius-pill);">
                     <i class="bi bi-briefcase me-1"></i>Manage
                 </a>
             </div>
@@ -179,17 +179,17 @@ include '../includes/header.php';
                                     <div class="text-muted" style="font-size:.8rem;"><?= date('M d, Y', strtotime($cand['applied_at'])) ?></div>
                                 </td>
                                 <td>
-                                    <a href="<?= $base_path . htmlspecialchars($cand['resume_path']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary fw-semibold" style="font-size:.75rem;">
+                                    <a href="<?= $base_path . htmlspecialchars($cand['resume_path']) ?>" target="_blank" class="table-btn btn btn-sm btn-outline-secondary">
                                         <i class="bi bi-file-earmark-pdf text-danger me-1"></i>Resume
                                     </a>
                                 </td>
                                 <td>
-                                    <span class="badge px-2 py-1 fw-semibold" style="background:<?= $badge['bg'] ?>;color:<?= $badge['text'] ?>;font-size:.75rem;">
+                                    <span class="badge px-2 py-1 fw-semibold" style="background:<?= $badge['bg'] ?>;color:<?= $badge['text'] ?>;font-size:.75rem;border-radius:var(--radius-pill);">
                                         <?= $badge['label'] ?>
                                     </span>
                                 </td>
                                 <td class="pe-4 text-end">
-                                    <a href="applicants.php?job_id=<?= $cand['job_id'] ?>" class="btn btn-sm btn-outline-primary fw-semibold" style="font-size:.75rem;">
+                                    <a href="applicants.php?job_id=<?= $cand['job_id'] ?>" class="table-btn btn btn-sm btn-outline-primary">
                                         Manage Status
                                     </a>
                                 </td>

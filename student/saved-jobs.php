@@ -91,17 +91,20 @@ include '../includes/header.php';
                         <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
                             <form action="../actions/remove-job.php" method="post" class="d-inline">
                                 <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                <button class="btn btn-outline-danger btn-sm fw-semibold" onclick="return confirm('Remove this job from your saved list?');">
-                                    <i class="bi bi-trash me-1"></i>Remove
+                                <button class="table-btn btn btn-outline-danger btn-sm" onclick="return confirm('Remove this job from your saved list?');">
+                                    <i class="bi bi-trash3 me-1"></i>Remove
                                 </button>
                             </form>
 
-                            <?php if ($isApplied): ?>
-                                <span class="badge px-3 py-2 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.78rem;">
-                                    <i class="bi bi-check-circle-fill me-1"></i>Applied (<?= ucfirst($appliedJobs[$job['id']]) ?>)
+                            <?php if ($isApplied):
+                                $rawSt = $appliedJobs[$job['id']];
+                                $stLabel = strtolower($rawSt) === 'applied' ? 'Applied' : ucfirst($rawSt);
+                            ?>
+                                <span class="badge px-3 py-2 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.78rem;border-radius:var(--radius-pill);">
+                                    <i class="bi bi-check-circle-fill me-1"></i><?= $stLabel ?>
                                 </span>
                             <?php else: ?>
-                                <a href="jobs.php?q=<?= urlencode($job['title']) ?>" class="btn btn-primary btn-sm px-3 fw-semibold">
+                                <a href="jobs.php?q=<?= urlencode($job['title']) ?>" class="table-btn btn btn-primary btn-sm px-3">
                                     <i class="bi bi-send me-1"></i>Apply Now
                                 </a>
                             <?php endif; ?>

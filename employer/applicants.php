@@ -139,13 +139,13 @@ include '../includes/header.php';
                                 <div class="text-muted mb-1" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Skills</div>
                                 <div class="d-flex flex-wrap gap-1">
                                     <?php foreach (explode(',', $cand['candidate_skills']) as $skill): ?>
-                                        <span class="badge" style="background:var(--brand-primary-lt);color:var(--brand-primary);font-size:.7rem;font-weight:600;"><?= htmlspecialchars(trim($skill)) ?></span>
+                                        <span class="badge" style="background:var(--brand-primary-lt);color:var(--brand-primary);font-size:.7rem;font-weight:600;border-radius:var(--radius-pill);padding:0.25rem 0.6rem;"><?= htmlspecialchars(trim($skill)) ?></span>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
                             <?php endif; ?>
 
-                            <a href="<?= $base_path . htmlspecialchars($cand['resume_path']) ?>" target="_blank" class="btn btn-outline-danger btn-sm px-3 fw-semibold">
+                            <a href="<?= $base_path . htmlspecialchars($cand['resume_path']) ?>" target="_blank" class="table-btn btn btn-outline-danger btn-sm">
                                 <i class="bi bi-file-earmark-pdf-fill me-1"></i>Download / View Resume
                             </a>
                         </div>
@@ -153,18 +153,18 @@ include '../includes/header.php';
                         <!-- Right Column: Status Update -->
                         <div class="col-lg-6">
                             <?php if (!empty($cand['cover_letter'])): ?>
-                            <div class="p-3 rounded-xl mb-3" style="background:var(--slate-50);border:1px solid var(--slate-200);">
+                            <div class="p-3 rounded-xl mb-3" style="background:var(--slate-50);border:1px solid var(--slate-200);border-radius:12px;">
                                 <div class="text-muted mb-1" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Cover Note</div>
                                 <div class="small text-dark" style="line-height:1.55;"><?= nl2br(htmlspecialchars($cand['cover_letter'])) ?></div>
                             </div>
                             <?php endif; ?>
 
-                            <form action="../actions/update-applicant-status.php" method="post" class="p-4 rounded-xl" style="background:var(--slate-50);border:1px solid var(--slate-200);">
+                            <form action="../actions/update-applicant-status.php" method="post" class="p-4" style="background:var(--slate-50);border:1px solid var(--slate-200);border-radius:14px;">
                                 <input type="hidden" name="application_id" value="<?= $cand['id'] ?>">
 
                                 <div class="mb-3">
                                     <label class="form-label fw-bold" style="font-size:.85rem;color:var(--slate-700);">Update Hiring Status</label>
-                                    <select class="form-select form-select-sm" name="status">
+                                    <select class="form-select" name="status" style="border-radius:10px;">
                                         <option value="applied" <?= $cand['status'] === 'applied' ? 'selected' : '' ?>>Applied (New)</option>
                                         <option value="reviewing" <?= $cand['status'] === 'reviewing' ? 'selected' : '' ?>>Reviewing</option>
                                         <option value="shortlisted" <?= $cand['status'] === 'shortlisted' ? 'selected' : '' ?>>Shortlisted</option>
@@ -175,12 +175,12 @@ include '../includes/header.php';
 
                                 <div class="mb-3">
                                     <label class="form-label fw-bold" style="font-size:.85rem;color:var(--slate-700);">Recruiter Notes / Next Steps</label>
-                                    <textarea class="form-control form-control-sm" name="recruiter_notes" rows="2" placeholder="e.g. Technical interview scheduled for Friday at 3 PM..."><?= htmlspecialchars($cand['recruiter_notes'] ?? '') ?></textarea>
+                                    <textarea class="form-control" name="recruiter_notes" rows="2" style="border-radius:10px;" placeholder="e.g. Technical interview scheduled for Friday at 3 PM..."><?= htmlspecialchars($cand['recruiter_notes'] ?? '') ?></textarea>
                                     <div class="form-text" style="font-size:.72rem;">Notes will be visible to the candidate as status updates.</div>
                                 </div>
 
                                 <div class="text-end">
-                                    <button type="submit" class="btn btn-primary btn-sm px-4 fw-semibold">
+                                    <button type="submit" class="btn btn-primary btn-sm px-4 fw-semibold" style="border-radius:var(--radius-pill);">
                                         <i class="bi bi-check2-circle me-1"></i>Save & Notify Candidate
                                     </button>
                                 </div>

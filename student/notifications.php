@@ -45,18 +45,18 @@ include '../includes/header.php';
                             <h6 class="mb-1 fw-bold text-dark" style="font-size:.9rem;"><?= htmlspecialchars($n['title']) ?></h6>
                             <p class="text-muted mb-1" style="font-size:.85rem;line-height:1.5;"><?= htmlspecialchars($n['message']) ?></p>
                             <div class="text-muted" style="font-size:0.75rem;">
-                                <i class="bi bi-clock me-1"></i><?= date('M d, Y &bull; h:i A', strtotime($n['created_at'])) ?>
+                                <i class="bi bi-clock me-1"></i><?= date('M d, Y', strtotime($n['created_at'])) ?> &bull; <?= date('h:i A', strtotime($n['created_at'])) ?>
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 flex-shrink-0">
                             <?php if (!empty($n['link'])): ?>
-                                <a href="<?= $base_path . htmlspecialchars($n['link']) ?>" class="btn btn-outline-primary btn-sm fw-semibold" style="font-size:.78rem;">
+                                <a href="<?= $base_path . htmlspecialchars($n['link']) ?>" class="table-btn btn btn-outline-primary btn-sm">
                                     View
                                 </a>
                             <?php endif; ?>
                             <?php if (!$n['is_read']): ?>
-                                <a href="../actions/mark-notifications.php?id=<?= $n['id'] ?>" class="btn btn-sm btn-link text-muted p-1" title="Mark as read">
-                                    <i class="bi bi-check2 fs-5"></i>
+                                <a href="../actions/mark-notifications.php?id=<?= $n['id'] ?>" class="table-btn-icon btn btn-outline-secondary btn-sm" title="Mark as read">
+                                    <i class="bi bi-check2"></i>
                                 </a>
                             <?php endif; ?>
                         </div>

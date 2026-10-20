@@ -83,29 +83,29 @@ include '../includes/header.php';
                             <td>
                                 <form action="../actions/toggle-featured.php" method="post" class="d-inline">
                                     <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                    <button class="btn btn-sm <?= !empty($job['is_featured']) ? 'btn-warning text-dark' : 'btn-outline-secondary' ?>" title="Toggle Featured status">
+                                    <button class="table-btn-icon btn btn-sm <?= !empty($job['is_featured']) ? 'btn-warning text-dark' : 'btn-outline-secondary' ?>" title="Toggle Featured status">
                                         <i class="bi bi-star<?= !empty($job['is_featured']) ? '-fill' : '' ?>"></i>
                                     </button>
                                 </form>
                             </td>
                             <td>
                                 <?php if ($job['status'] === 'active'): ?>
-                                    <span class="badge px-2 py-1 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.72rem;">Active</span>
+                                    <span class="badge px-3 py-1 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.75rem;border-radius:var(--radius-pill);">Active</span>
                                 <?php else: ?>
-                                    <span class="badge px-2 py-1 fw-semibold" style="background:#f1f5f9;color:#475569;font-size:.72rem;">Closed</span>
+                                    <span class="badge px-3 py-1 fw-semibold" style="background:#f1f5f9;color:#475569;font-size:.75rem;border-radius:var(--radius-pill);">Closed</span>
                                 <?php endif; ?>
                             </td>
                             <td class="pe-4 text-end">
-                                <div class="d-inline-flex gap-1">
+                                <div class="d-inline-flex gap-1 align-items-center">
                                     <form action="../actions/toggle-job-status.php" method="post" class="d-inline">
                                         <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                        <button class="btn btn-outline-secondary btn-sm fw-semibold" style="font-size:.72rem;" title="Toggle active/closed">
+                                        <button class="table-btn btn btn-outline-secondary btn-sm" title="Toggle active/closed">
                                             <?= $job['status'] === 'active' ? 'Close' : 'Reopen' ?>
                                         </button>
                                     </form>
                                     <form action="../actions/delete-job.php" method="post" class="d-inline">
                                         <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                        <button class="btn btn-outline-danger btn-sm" style="font-size:.72rem;" title="Delete" onclick="return confirm('Permanently delete this job posting?');">
+                                        <button class="table-btn-icon btn btn-outline-danger btn-sm" title="Delete" onclick="return confirm('Permanently delete this job posting?');">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>

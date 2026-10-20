@@ -77,41 +77,41 @@ include '../includes/header.php';
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <a href="applicants.php?job_id=<?= $job['id'] ?>" class="btn btn-sm btn-outline-primary fw-semibold position-relative" style="font-size:.78rem;">
+                                    <a href="applicants.php?job_id=<?= $job['id'] ?>" class="table-btn btn btn-sm btn-outline-primary fw-semibold position-relative">
                                         <i class="bi bi-people me-1"></i>Candidates
                                         <span class="badge bg-primary text-white ms-1"><?= $job['applicant_count'] ?></span>
                                     </a>
                                 </td>
                                 <td>
                                     <?php if ($job['status'] === 'active'): ?>
-                                        <span class="badge px-3 py-1 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.75rem;">
+                                        <span class="badge px-3 py-1 fw-semibold" style="background:#d1fae5;color:#065f46;font-size:.75rem;border-radius:var(--radius-pill);">
                                             <i class="bi bi-check-circle me-1"></i>Active
                                         </span>
                                     <?php else: ?>
-                                        <span class="badge px-3 py-1 fw-semibold" style="background:#f1f5f9;color:#475569;font-size:.75rem;">
+                                        <span class="badge px-3 py-1 fw-semibold" style="background:#f1f5f9;color:#475569;font-size:.75rem;border-radius:var(--radius-pill);">
                                             <i class="bi bi-dash-circle me-1"></i>Closed
                                         </span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="pe-4 text-end">
-                                    <div class="d-inline-flex gap-1">
+                                    <div class="d-inline-flex gap-1 align-items-center">
                                         <!-- Status Toggle Form -->
                                         <form action="../actions/toggle-job-status.php" method="post" class="d-inline">
                                             <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                            <button class="btn btn-outline-secondary btn-sm fw-semibold" style="font-size:.75rem;" title="Toggle status (Active / Closed)">
+                                            <button class="table-btn btn btn-outline-secondary btn-sm" title="Toggle status (Active / Closed)">
                                                 <?= $job['status'] === 'active' ? 'Close' : 'Reopen' ?>
                                             </button>
                                         </form>
 
                                         <!-- Edit Job Button -->
-                                        <a href="edit-job.php?id=<?= $job['id'] ?>" class="btn btn-outline-primary btn-sm fw-semibold" style="font-size:.75rem;" title="Edit Job">
+                                        <a href="edit-job.php?id=<?= $job['id'] ?>" class="table-btn-icon btn btn-outline-primary btn-sm" title="Edit Job">
                                             <i class="bi bi-pencil"></i>
                                         </a>
 
                                         <!-- Delete Job Form -->
                                         <form action="../actions/delete-job.php" method="post" class="d-inline">
                                             <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                                            <button class="btn btn-outline-danger btn-sm fw-semibold" style="font-size:.75rem;" title="Delete job posting" onclick="return confirm('Are you sure you want to delete this job and all associated applications?');">
+                                            <button class="table-btn-icon btn btn-outline-danger btn-sm" title="Delete job posting" onclick="return confirm('Are you sure you want to delete this job and all associated applications?');">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>

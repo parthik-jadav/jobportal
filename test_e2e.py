@@ -37,7 +37,7 @@ def run_tests():
 
         # 1.1 Homepage
         try:
-            page.goto(f"{BASE_URL}/index.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/index.php", wait_until="load")
             title_ok = "JobPortal" in page.title()
             log_test("Homepage loads with correct title", title_ok, page.title())
 
@@ -51,12 +51,12 @@ def run_tests():
 
         # 1.2 Feedback Submission
         try:
-            page.goto(f"{BASE_URL}/contact.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/contact.php", wait_until="load")
             page.fill('input[name="name"]', "Automated E2E Bot")
             page.fill('input[name="email"]', "bot@test.com")
             page.fill('textarea[name="message"]', "Automated end-to-end feedback verification message.")
             page.click('button:has-text("Submit feedback")')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             alert_text = page.locator(".alert-success").inner_text()
             feedback_ok = "Thank you" in alert_text or "submitted" in alert_text
@@ -75,11 +75,11 @@ def run_tests():
 
         # 2.1 Login
         try:
-            page.goto(f"{BASE_URL}/login.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/login.php", wait_until="load")
             page.fill('input[name="email"]', "demo@demo.com")
             page.fill('input[name="password"]', "student123")
             page.click('button:has-text("Log in"), button[type="submit"]')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             dash_ok = "student/dashboard.php" in page.url
             log_test("Student login redirects to student dashboard", dash_ok, page.url)
@@ -91,14 +91,14 @@ def run_tests():
 
         # 2.2 Profile & Resume Upload
         try:
-            page.goto(f"{BASE_URL}/student/profile.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/profile.php", wait_until="load")
             page.fill('input[name="phone"]', "+91 98111 22334")
             page.fill('input[name="education"]', "B.Tech Computer Science & AI (2025)")
             page.fill('textarea[name="skills"]', "PHP, MySQL, JavaScript, React, Python, Playwright")
             if os.path.exists(TEST_RESUME_PATH):
                 page.set_input_files('input[name="resume"]', TEST_RESUME_PATH)
             page.click('button:has-text("Save Changes")')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             profile_ok = page.locator(".alert-success").count() > 0
             log_test("Student profile and resume update", profile_ok)
@@ -107,29 +107,29 @@ def run_tests():
 
         # 2.3 Job Search, Filters & Bookmarking
         try:
-            page.goto(f"{BASE_URL}/student/jobs.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/jobs.php", wait_until="load")
             jobs_count_initial = page.locator(".job-card").count()
             log_test("Student job listings view loaded", jobs_count_initial > 0, f"({jobs_count_initial} jobs)")
 
             # Test filter by Type
             page.select_option('select[name="type"]', "Internship")
             page.click('button:has-text("Filter Jobs")')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             filtered_count = page.locator(".job-card").count()
             log_test("Filter by job type 'Internship' applied", filtered_count > 0, f"({filtered_count} internships)")
 
             # Test Bookmark / Save
-            page.goto(f"{BASE_URL}/student/jobs.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/jobs.php", wait_until="load")
             save_form_btn = page.locator('form[action*="save-job.php"] button').first
             if save_form_btn.count() > 0:
                 save_form_btn.click()
-                page.wait_for_load_state("networkidle")
+                page.wait_for_load_state("load")
                 log_test("Job bookmarking (Save button clicked)", True)
             else:
                 log_test("Job bookmarking", True, "(All visible jobs already bookmarked)")
 
-            page.goto(f"{BASE_URL}/student/saved-jobs.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/saved-jobs.php", wait_until="load")
             saved_count = page.locator(".job-card").count()
             log_test("Saved jobs list displays bookmarked openings", saved_count > 0, f"({saved_count} saved)")
         except Exception as e:
@@ -137,7 +137,7 @@ def run_tests():
 
         # 2.4 One-Click Application with Modal
         try:
-            page.goto(f"{BASE_URL}/student/jobs.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/jobs.php", wait_until="load")
             apply_btn = page.locator('button:has-text("Apply Now")').first
             if apply_btn.count() > 0:
                 apply_btn.click()
@@ -150,14 +150,14 @@ def run_tests():
                 if cover_note.count() > 0:
                     cover_note.fill("Automated E2E application: Excited to apply for this opening.")
                 modal.locator('button:has-text("Submit Application")').click()
-                page.wait_for_load_state("networkidle")
+                page.wait_for_load_state("load")
 
                 app_redirect = "student/applications.php" in page.url
                 log_test("Application submitted and redirected to tracker", app_redirect, page.url)
             else:
                 log_test("Job application modal", True, "(All listed jobs already applied)")
 
-            page.goto(f"{BASE_URL}/student/applications.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/applications.php", wait_until="load")
             total_apps = page.locator("tbody tr").count()
             log_test("Student My Applications table is populated", total_apps > 0, f"({total_apps} applications)")
         except Exception as e:
@@ -174,11 +174,11 @@ def run_tests():
 
         # 3.1 Employer Login
         try:
-            page.goto(f"{BASE_URL}/login.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/login.php", wait_until="load")
             page.fill('input[name="email"]', "employer@jobportal.test")
             page.fill('input[name="password"]', "employer123")
             page.click('button:has-text("Log in"), button[type="submit"]')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             emp_dash_ok = "employer/dashboard.php" in page.url
             log_test("Employer login redirects to employer dashboard", emp_dash_ok, page.url)
@@ -191,7 +191,7 @@ def run_tests():
         # 3.2 Post New Job
         new_job_title = f"QA Automation Engineer {int(time.time())}"
         try:
-            page.goto(f"{BASE_URL}/employer/post-job.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/employer/post-job.php", wait_until="load")
             page.fill('input[name="title"]', new_job_title)
             page.select_option('select[name="category"]', "Technology & Engineering")
             page.fill('input[name="location"]', "Hybrid - Bengaluru, India")
@@ -202,7 +202,7 @@ def run_tests():
             page.fill('textarea[name="description"]', "Build end-to-end automated test suites using Playwright, CI/CD pipelines, and Python.")
             page.fill('textarea[name="requirements"]', "Python, Playwright, API Testing, Git, Linux basics.")
             page.click('button:has-text("Publish Job Opening")')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             post_ok = "employer/manage-jobs.php" in page.url and page.locator(f"text={new_job_title}").count() > 0
             log_test("Post new job opening and display in listings", post_ok, new_job_title)
@@ -211,18 +211,18 @@ def run_tests():
 
         # 3.3 Status Toggle (Active / Closed)
         try:
-            page.goto(f"{BASE_URL}/employer/manage-jobs.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/employer/manage-jobs.php", wait_until="load")
             close_btn = page.locator('button:has-text("Close")').first
             if close_btn.count() > 0:
                 close_btn.click()
-                page.wait_for_load_state("networkidle")
+                page.wait_for_load_state("load")
                 closed_badge = page.locator('.badge:has-text("Closed")').count() > 0
                 log_test("Toggle job status from Active to Closed", closed_badge)
 
                 # Reopen
                 reopen_btn = page.locator('button:has-text("Reopen")').first
                 reopen_btn.click()
-                page.wait_for_load_state("networkidle")
+                page.wait_for_load_state("load")
                 active_badge = page.locator('.badge:has-text("Active")').count() > 0
                 log_test("Toggle job status from Closed back to Active", active_badge)
             else:
@@ -232,7 +232,7 @@ def run_tests():
 
         # 3.4 Candidate Pipeline & Shortlisting
         try:
-            page.goto(f"{BASE_URL}/employer/applicants.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/employer/applicants.php", wait_until="load")
             applicants_count = page.locator(".card").count()
             log_test("Candidate pipeline view loaded", applicants_count > 0, f"({applicants_count} candidate cards)")
 
@@ -246,7 +246,7 @@ def run_tests():
             notes_field = page.locator('textarea[name="recruiter_notes"]').first
             notes_field.fill("Candidate meets all core criteria. Scheduled technical round.")
             page.locator('button:has-text("Save & Notify Candidate")').first.click()
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             shortlist_badge = page.locator('.badge:has-text("Shortlisted")').count() > 0
             log_test("Update candidate status to Shortlisted with notes", shortlist_badge)
@@ -264,11 +264,11 @@ def run_tests():
 
         try:
             # Login as student again
-            page.goto(f"{BASE_URL}/login.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/login.php", wait_until="load")
             page.fill('input[name="email"]', "demo@demo.com")
             page.fill('input[name="password"]', "student123")
             page.click('button:has-text("Log in"), button[type="submit"]')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             # Check notification badge in navbar
             bell_badge = page.locator(".bi-bell + .badge.bg-danger")
@@ -276,12 +276,12 @@ def run_tests():
             log_test("Navbar notification bell displays unread count badge", badge_present)
 
             # Open notifications page
-            page.goto(f"{BASE_URL}/student/notifications.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/notifications.php", wait_until="load")
             notif_items = page.locator(".list-group-item").count()
             log_test("Notification center displays status change alerts", notif_items > 0, f"({notif_items} notifications)")
 
             # Check applications page status badge
-            page.goto(f"{BASE_URL}/student/applications.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/student/applications.php", wait_until="load")
             status_shortlisted = page.locator('span.badge:has-text("Shortlisted")').count() > 0
             log_test("Student applications table reflects 'Shortlisted' status badge", status_shortlisted)
         except Exception as e:
@@ -298,11 +298,11 @@ def run_tests():
 
         # 5.1 Admin Login & KPIs
         try:
-            page.goto(f"{BASE_URL}/admin/login.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/admin/login.php", wait_until="load")
             page.fill('input[name="email"]', "admin@jobportal.test")
             page.fill('input[name="password"]', "admin123")
             page.click('button:has-text("Log in as admin"), button[type="submit"]')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
 
             admin_dash_ok = "admin/dashboard.php" in page.url
             log_test("Admin login redirects to admin dashboard", admin_dash_ok, page.url)
@@ -314,14 +314,14 @@ def run_tests():
 
         # 5.2 Job Moderation
         try:
-            page.goto(f"{BASE_URL}/admin/jobs.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/admin/jobs.php", wait_until="load")
             admin_jobs = page.locator("tbody tr").count()
             log_test("Admin job moderation table is populated", admin_jobs > 0, f"({admin_jobs} jobs listed)")
 
             # Toggle featured star
             star_btn = page.locator('button[title="Toggle Featured status"]').first
             star_btn.click()
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
             alert_star = page.locator(".alert-success").count() > 0
             log_test("Admin toggle job Featured status", alert_star)
         except Exception as e:
@@ -329,13 +329,13 @@ def run_tests():
 
         # 5.3 User Account Moderation
         try:
-            page.goto(f"{BASE_URL}/admin/users.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/admin/users.php", wait_until="load")
             users_count = page.locator("tbody tr").count()
             log_test("Admin user accounts table is populated", users_count > 0, f"({users_count} users listed)")
 
             # Test role filter tab
             page.click('a:has-text("Employers")')
-            page.wait_for_load_state("networkidle")
+            page.wait_for_load_state("load")
             emp_users = page.locator("tbody tr").count()
             log_test("Admin user role filtering by 'Employers'", emp_users > 0, f"({emp_users} employers)")
 
@@ -343,13 +343,13 @@ def run_tests():
             suspend_btn = page.locator('button:has-text("Suspend")').first
             if suspend_btn.count() > 0:
                 suspend_btn.click()
-                page.wait_for_load_state("networkidle")
+                page.wait_for_load_state("load")
                 has_suspended = page.locator('.badge:has-text("Suspended")').count() > 0
                 log_test("Admin suspend user account", has_suspended)
 
                 activate_btn = page.locator('button:has-text("Activate")').first
                 activate_btn.click()
-                page.wait_for_load_state("networkidle")
+                page.wait_for_load_state("load")
                 has_active = page.locator('.badge:has-text("Active")').count() > 0
                 log_test("Admin reactivate user account", has_active)
             else:
@@ -359,7 +359,7 @@ def run_tests():
 
         # 5.4 CSV Data Exports
         try:
-            page.goto(f"{BASE_URL}/admin/reports.php", wait_until="networkidle")
+            page.goto(f"{BASE_URL}/admin/reports.php", wait_until="load")
             funnel_ok = page.locator(".progress-bar").count() >= 5
             log_test("Admin reports displays hiring pipeline funnel breakdown", funnel_ok)
 

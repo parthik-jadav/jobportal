@@ -7,22 +7,24 @@ $base_path = '../';
 $page_title = 'Employer Dashboard';
 $employerId = (int)$_SESSION['user']['id'];
 
-// Get employer user & company info
 $empStmt = $pdo->prepare('SELECT * FROM users WHERE id = ?');
 $empStmt->execute([$employerId]);
 $employer = $empStmt->fetch();
 
-// Statistics
 $jobsCountStmt = $pdo->prepare('SELECT COUNT(*) FROM jobs WHERE employer_id = ? AND status = "active"');
 $jobsCountStmt->execute([$employerId]);
 $activeJobsCount = (int)$jobsCountStmt->fetchColumn();
 
+$totalJobsStmt = $pdo->prepare('SELECT COUNT(*) FROM jobs WHERE employer_id = ?');
+$totalJobsStmt->execute([$employerId]);
+$totalJobsCount = (int)$totalJobsStmt->fetchColumn();
+
 $appStatsStmt = $pdo->prepare('
     SELECT 
         COUNT(*) as total_apps,
-        SUM(CASE WHEN a.status = "reviewing" THEN 1 ELSE 0 END) as reviewing_count,
+        SUM(CASE WHEN a.status = "reviewing"   THEN 1 ELSE 0 END) as reviewing_count,
         SUM(CASE WHEN a.status = "shortlisted" THEN 1 ELSE 0 END) as shortlisted_count,
-        SUM(CASE WHEN a.status = "hired" THEN 1 ELSE 0 END) as hired_count
+        SUM(CASE WHEN a.status = "hired"       THEN 1 ELSE 0 END) as hired_count
     FROM applications a
     JOIN jobs j ON a.job_id = j.id
     WHERE j.employer_id = ?
@@ -30,9 +32,8 @@ $appStatsStmt = $pdo->prepare('
 $appStatsStmt->execute([$employerId]);
 $appStats = $appStatsStmt->fetch();
 
-// Recent candidates / applicants
 $recentApplicantsStmt = $pdo->prepare('
-    SELECT a.*, u.name as candidate_name, u.email as candidate_email, u.phone as candidate_phone, u.education, j.title as job_title
+    SELECT a.*, u.name as candidate_name, u.email as candidate_email, u.phone as candidate_phone, j.title as job_title
     FROM applications a
     JOIN users u ON a.user_id = u.id
     JOIN jobs j ON a.job_id = j.id
@@ -43,96 +44,102 @@ $recentApplicantsStmt = $pdo->prepare('
 $recentApplicantsStmt->execute([$employerId]);
 $recentApplicants = $recentApplicantsStmt->fetchAll();
 
+$companyName = $employer['company_name'] ?: $employer['name'];
+$companyInitials = avatarInitials($companyName);
+
 include '../includes/header.php';
 ?>
-<section class="container py-5">
-    <!-- Hero / Recruiter Header -->
-    <div class="card p-4 p-md-5 mb-4 shadow-sm border-0 text-white" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+
+<div class="container py-4">
+
+    <!-- ░░ Company Header Card ░░ -->
+    <div class="company-header-card mb-4 fade-up">
         <div class="row align-items-center">
-            <div class="col-lg-8">
-                <span class="badge bg-warning text-dark mb-2 px-3 py-1 fw-bold">Employer Hub</span>
-                <h1 class="display-6 fw-bold mb-1"><?= htmlspecialchars($employer['company_name'] ?: $employer['name']) ?></h1>
-                <p class="lead mb-0 opacity-75" style="font-size: 1.1rem;">
-                    Manage your job listings, track incoming candidate applications, and hire top talent.
-                </p>
+            <div class="col-lg-8 d-flex align-items-center gap-4">
+                <div class="company-logo-placeholder"><?= htmlspecialchars($companyInitials) ?></div>
+                <div>
+                    <div class="portal-badge" style="background:rgba(245,158,11,.2);color:#fcd34d;border-color:rgba(245,158,11,.3);">Employer Hub</div>
+                    <h1 class="fw-bold mb-1" style="font-size:1.6rem;"><?= htmlspecialchars($companyName) ?></h1>
+                    <div style="color:rgba(255,255,255,.6);font-size:.875rem;">
+                        <i class="bi bi-envelope me-1"></i><?= htmlspecialchars($employer['email']) ?>
+                        <?php if (!empty($employer['company_website'])): ?>
+                            &bull; <i class="bi bi-globe me-1"></i><a href="<?= htmlspecialchars($employer['company_website']) ?>" target="_blank" style="color:rgba(255,255,255,.6);"><?= htmlspecialchars($employer['company_website']) ?></a>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-                <a href="post-job.php" class="btn btn-warning text-dark fw-bold px-4 py-2 me-2">
-                    <i class="bi bi-plus-circle me-1"></i>Post a New Job
+            <div class="col-lg-4 mt-3 mt-lg-0 d-flex gap-2 justify-content-lg-end flex-wrap">
+                <a href="post-job.php" class="btn fw-bold px-4" style="background:var(--brand-accent);color:#1c1917;border:none;">
+                    <i class="bi bi-plus-circle me-1"></i>Post a Job
                 </a>
-                <a href="manage-jobs.php" class="btn btn-outline-light px-3 py-2">
-                    <i class="bi bi-briefcase me-1"></i>Manage Listings
+                <a href="manage-jobs.php" class="btn fw-semibold px-3" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);">
+                    <i class="bi bi-briefcase me-1"></i>Manage
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Quick Stats Cards -->
-    <div class="row g-4 mb-4">
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-primary">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="text-muted small fw-semibold">Active Postings</div>
-                        <div class="display-6 fw-bold text-dark mt-1"><?= $activeJobsCount ?></div>
-                    </div>
-                    <i class="bi bi-briefcase-fill fs-1 text-primary opacity-50"></i>
+    <!-- ░░ KPI Cards ░░ -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3 fade-up delay-1">
+            <div class="kpi-card kpi-indigo">
+                <div class="kpi-icon-wrap"><i class="bi bi-briefcase-fill"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $activeJobsCount ?></div>
+                    <div class="kpi-label">Active Postings</div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-info">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="text-muted small fw-semibold">Total Applicants</div>
-                        <div class="display-6 fw-bold text-info mt-1"><?= $appStats['total_apps'] ?? 0 ?></div>
-                    </div>
-                    <i class="bi bi-people-fill fs-1 text-info opacity-50"></i>
+        <div class="col-6 col-lg-3 fade-up delay-1">
+            <div class="kpi-card kpi-sky">
+                <div class="kpi-icon-wrap"><i class="bi bi-people-fill"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $appStats['total_apps'] ?? 0 ?></div>
+                    <div class="kpi-label">Total Applicants</div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-warning">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="text-muted small fw-semibold">Shortlisted</div>
-                        <div class="display-6 fw-bold text-warning mt-1"><?= $appStats['shortlisted_count'] ?? 0 ?></div>
-                    </div>
-                    <i class="bi bi-star-fill fs-1 text-warning opacity-50"></i>
+        <div class="col-6 col-lg-3 fade-up delay-2">
+            <div class="kpi-card kpi-amber">
+                <div class="kpi-icon-wrap"><i class="bi bi-star-fill"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $appStats['shortlisted_count'] ?? 0 ?></div>
+                    <div class="kpi-label">Shortlisted</div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-success">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="text-muted small fw-semibold">Offers Made / Hired</div>
-                        <div class="display-6 fw-bold text-success mt-1"><?= $appStats['hired_count'] ?? 0 ?></div>
-                    </div>
-                    <i class="bi bi-check-circle-fill fs-1 text-success opacity-50"></i>
+        <div class="col-6 col-lg-3 fade-up delay-2">
+            <div class="kpi-card kpi-emerald">
+                <div class="kpi-icon-wrap"><i class="bi bi-patch-check-fill"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $appStats['hired_count'] ?? 0 ?></div>
+                    <div class="kpi-label">Offers / Hired</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Applicants Pipeline -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold mb-0"><i class="bi bi-person-lines-fill text-primary me-2"></i>Recent Candidate Applications</h5>
-            <a href="applicants.php" class="btn btn-sm btn-outline-primary">View All Applicants</a>
-        </div>
+    <!-- ░░ Recent Applicants Table ░░ -->
+    <div class="card border-0 mb-0" style="box-shadow:var(--shadow-md);">
         <div class="card-body p-0">
+            <div class="d-flex justify-content-between align-items-center p-4 border-bottom">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-person-lines-fill me-2" style="color:var(--brand-primary);"></i>Recent Candidate Applications
+                </h5>
+                <a href="applicants.php" class="btn btn-outline-primary btn-sm fw-semibold">View All</a>
+            </div>
+
             <?php if (empty($recentApplicants)): ?>
-                <div class="p-5 text-center text-muted">
-                    <i class="bi bi-people fs-1 d-block mb-3"></i>
-                    <h5 class="fw-bold">No candidates have applied yet</h5>
-                    <p class="mb-3">Post openings or share listings to start attracting candidates.</p>
-                    <a href="post-job.php" class="btn btn-primary btn-sm px-4">Post a Job Opening</a>
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="bi bi-people"></i></div>
+                    <h5>No applications yet</h5>
+                    <p>Post openings or share your listings to attract candidates.</p>
+                    <a href="post-job.php" class="btn btn-primary px-4">Post a Job Opening</a>
                 </div>
             <?php else: ?>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
+                    <table class="table table-hover align-middle mb-0 aura-table" style="border:none;border-radius:0;">
+                        <thead>
                             <tr>
                                 <th class="ps-4">Candidate</th>
                                 <th>Role Applied</th>
@@ -143,43 +150,50 @@ include '../includes/header.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($recentApplicants as $cand): 
-                                $statusBadge = match($cand['status']) {
-                                    'applied' => 'bg-primary-subtle text-primary',
-                                    'reviewing' => 'bg-info-subtle text-info',
-                                    'shortlisted' => 'bg-warning-subtle text-warning',
-                                    'hired' => 'bg-success-subtle text-success',
-                                    'rejected' => 'bg-danger-subtle text-danger',
-                                    default => 'bg-secondary-subtle text-secondary'
+                            <?php foreach ($recentApplicants as $cand):
+                                $badge = match($cand['status']) {
+                                    'applied'     => ['bg' => '#e0e7ff', 'text' => '#4338ca', 'label' => 'Applied'],
+                                    'reviewing'   => ['bg' => '#cffafe', 'text' => '#0e7490', 'label' => 'Reviewing'],
+                                    'shortlisted' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'Shortlisted'],
+                                    'hired'       => ['bg' => '#d1fae5', 'text' => '#065f46', 'label' => 'Hired'],
+                                    'rejected'    => ['bg' => '#ffe4e6', 'text' => '#9f1239', 'label' => 'Not Selected'],
+                                    default       => ['bg' => '#f1f5f9', 'text' => '#475569', 'label' => ucfirst($cand['status'])]
                                 };
+                                $candInitials = avatarInitials($cand['candidate_name']);
+                                $candAvClass  = avatarColorClass($cand['candidate_name']);
                             ?>
-                                <tr>
-                                    <td class="ps-4">
-                                        <div class="fw-bold text-dark"><?= htmlspecialchars($cand['candidate_name']) ?></div>
-                                        <div class="small text-muted"><?= htmlspecialchars($cand['candidate_email']) ?> &bull; <?= htmlspecialchars($cand['candidate_phone'] ?: 'No phone') ?></div>
-                                    </td>
-                                    <td>
-                                        <div class="fw-semibold small"><?= htmlspecialchars($cand['job_title']) ?></div>
-                                    </td>
-                                    <td>
-                                        <div class="small text-muted"><?= date('M d, Y', strtotime($cand['applied_at'])) ?></div>
-                                    </td>
-                                    <td>
-                                        <a href="<?= $base_path . htmlspecialchars($cand['resume_path']) ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
-                                            <i class="bi bi-file-earmark-pdf text-danger me-1"></i>Resume
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <span class="badge <?= $statusBadge ?> px-3 py-2 text-capitalize">
-                                            <?= htmlspecialchars($cand['status']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="pe-4 text-end">
-                                        <a href="applicants.php?job_id=<?= $cand['job_id'] ?>" class="btn btn-outline-primary btn-sm">
-                                            Manage Status
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="company-avatar <?= $candAvClass ?>" style="width:36px;height:36px;font-size:.75rem;"><?= htmlspecialchars($candInitials) ?></div>
+                                        <div>
+                                            <div class="fw-bold text-dark"><?= htmlspecialchars($cand['candidate_name']) ?></div>
+                                            <div class="text-muted" style="font-size:.75rem;"><?= htmlspecialchars($cand['candidate_email']) ?></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold" style="font-size:.875rem;"><?= htmlspecialchars($cand['job_title']) ?></div>
+                                </td>
+                                <td>
+                                    <div class="text-muted" style="font-size:.8rem;"><?= date('M d, Y', strtotime($cand['applied_at'])) ?></div>
+                                </td>
+                                <td>
+                                    <a href="<?= $base_path . htmlspecialchars($cand['resume_path']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary fw-semibold" style="font-size:.75rem;">
+                                        <i class="bi bi-file-earmark-pdf text-danger me-1"></i>Resume
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge px-2 py-1 fw-semibold" style="background:<?= $badge['bg'] ?>;color:<?= $badge['text'] ?>;font-size:.75rem;">
+                                        <?= $badge['label'] ?>
+                                    </span>
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <a href="applicants.php?job_id=<?= $cand['job_id'] ?>" class="btn btn-sm btn-outline-primary fw-semibold" style="font-size:.75rem;">
+                                        Manage Status
+                                    </a>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -187,5 +201,7 @@ include '../includes/header.php';
             <?php endif; ?>
         </div>
     </div>
-</section>
+
+</div>
+
 <?php include '../includes/footer.php'; ?>

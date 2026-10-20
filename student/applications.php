@@ -5,10 +5,8 @@ require_student();
 
 $base_path = '../';
 $page_title = 'My Applications';
-
 $userId = (int)$_SESSION['user']['id'];
 
-// Fetch applications with job details
 $stmt = $pdo->prepare('
     SELECT a.*, j.title, j.company, j.location, j.job_type, j.salary 
     FROM applications a
@@ -19,182 +17,259 @@ $stmt = $pdo->prepare('
 $stmt->execute([$userId]);
 $applications = $stmt->fetchAll();
 
-// Counts for quick stats
 $total = count($applications);
-$reviewing = 0;
-$shortlisted = 0;
-$hired = 0;
+$reviewing = $shortlisted = $hired = 0;
 foreach ($applications as $app) {
-    if ($app['status'] === 'reviewing') $reviewing++;
+    if ($app['status'] === 'reviewing')   $reviewing++;
     if ($app['status'] === 'shortlisted') $shortlisted++;
-    if ($app['status'] === 'hired') $hired++;
+    if ($app['status'] === 'hired')       $hired++;
 }
 
 include '../includes/header.php';
 ?>
-<section class="container py-5">
+
+<div class="container py-4">
+
+    <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
             <h1 class="h2 fw-bold mb-1">My Applications</h1>
-            <p class="text-muted mb-0">Track the real-time hiring status of your submitted job applications.</p>
+            <p class="text-muted mb-0">Track real-time hiring status of your submitted applications.</p>
         </div>
-        <a href="jobs.php" class="btn btn-primary">
+        <a href="jobs.php" class="btn btn-primary fw-semibold">
             <i class="bi bi-search me-1"></i>Find More Jobs
         </a>
     </div>
 
-    <!-- Quick Stats Cards -->
+    <!-- ░░ KPI Row ░░ -->
     <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-primary">
-                <div class="text-muted small">Total Submissions</div>
-                <div class="h3 fw-bold mb-0"><?= $total ?></div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-indigo">
+                <div class="kpi-icon-wrap"><i class="bi bi-send-fill"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $total ?></div>
+                    <div class="kpi-label">Total Applied</div>
+                </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-info">
-                <div class="text-muted small">Under Review</div>
-                <div class="h3 fw-bold mb-0 text-info"><?= $reviewing ?></div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-sky">
+                <div class="kpi-icon-wrap"><i class="bi bi-clock-history"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $reviewing ?></div>
+                    <div class="kpi-label">Under Review</div>
+                </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-warning">
-                <div class="text-muted small">Shortlisted</div>
-                <div class="h3 fw-bold mb-0 text-warning"><?= $shortlisted ?></div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-amber">
+                <div class="kpi-icon-wrap"><i class="bi bi-star-fill"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $shortlisted ?></div>
+                    <div class="kpi-label">Shortlisted</div>
+                </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card p-3 shadow-sm border-start border-4 border-success">
-                <div class="text-muted small">Offers / Hired</div>
-                <div class="h3 fw-bold mb-0 text-success"><?= $hired ?></div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-emerald">
+                <div class="kpi-icon-wrap"><i class="bi bi-patch-check-fill"></i></div>
+                <div>
+                    <div class="kpi-value"><?= $hired ?></div>
+                    <div class="kpi-label">Hired</div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- ░░ Applications Table ░░ -->
     <?php if (empty($applications)): ?>
-        <div class="card p-5 text-center shadow-sm">
-            <i class="bi bi-send-x fs-1 text-muted mb-3"></i>
-            <h4 class="fw-bold">No applications submitted yet</h4>
-            <p class="text-muted mb-4">You have not applied for any positions yet. Explore openings and start applying today!</p>
-            <div>
-                <a href="jobs.php" class="btn btn-primary px-4 py-2">
+        <div class="card border-0" style="box-shadow:var(--shadow-md);">
+            <div class="empty-state">
+                <div class="empty-icon"><i class="bi bi-send-x"></i></div>
+                <h5>No applications yet</h5>
+                <p>You haven't applied to any positions. Start exploring openings!</p>
+                <a href="jobs.php" class="btn btn-primary px-5">
                     <i class="bi bi-search me-1"></i>Browse Openings
                 </a>
             </div>
         </div>
     <?php else: ?>
-        <div class="card shadow-sm border-0">
+        <div class="card border-0" style="box-shadow:var(--shadow-md);overflow:hidden;">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table aura-table table-hover align-middle mb-0">
+                    <thead>
                         <tr>
-                            <th class="ps-4">Job Details</th>
-                            <th>Job Type</th>
+                            <th class="ps-4">Company & Job Title</th>
+                            <th>Type</th>
                             <th>Applied Date</th>
+                            <th>Pipeline Stage</th>
                             <th>Resume</th>
-                            <th>Status</th>
                             <th class="pe-4 text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($applications as $app): ?>
-                            <tr>
-                                <td class="ps-4">
-                                    <div class="fw-bold text-dark"><?= htmlspecialchars($app['title']) ?></div>
-                                    <div class="text-muted small">
-                                        <i class="bi bi-building me-1"></i><?= htmlspecialchars($app['company']) ?> &bull; 
-                                        <i class="bi bi-geo-alt me-1"></i><?= htmlspecialchars($app['location']) ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary-subtle text-secondary"><?= htmlspecialchars($app['job_type']) ?></span>
-                                </td>
-                                <td>
-                                    <div class="small text-muted">
-                                        <?= date('M d, Y', strtotime($app['applied_at'])) ?>
-                                    </div>
-                                    <div class="text-muted" style="font-size: 0.75rem;">
-                                        <?= date('h:i A', strtotime($app['applied_at'])) ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="<?= $base_path . htmlspecialchars($app['resume_path']) ?>" target="_blank" class="btn btn-outline-secondary btn-sm" title="Preview Resume Used">
-                                        <i class="bi bi-file-earmark-pdf text-danger me-1"></i>Resume
-                                    </a>
-                                </td>
-                                <td>
-                                    <?php
-                                    $badge = match($app['status']) {
-                                        'applied' => ['bg' => 'bg-primary-subtle', 'text' => 'text-primary', 'label' => 'Applied', 'icon' => 'bi-send'],
-                                        'reviewing' => ['bg' => 'bg-info-subtle', 'text' => 'text-info', 'label' => 'Reviewing', 'icon' => 'bi-clock-history'],
-                                        'shortlisted' => ['bg' => 'bg-warning-subtle', 'text' => 'text-warning', 'label' => 'Shortlisted', 'icon' => 'bi-star-fill'],
-                                        'hired' => ['bg' => 'bg-success-subtle', 'text' => 'text-success', 'label' => 'Hired', 'icon' => 'bi-check-circle-fill'],
-                                        'rejected' => ['bg' => 'bg-danger-subtle', 'text' => 'text-danger', 'label' => 'Not Selected', 'icon' => 'bi-x-circle'],
-                                        default => ['bg' => 'bg-secondary-subtle', 'text' => 'text-secondary', 'label' => ucfirst($app['status']), 'icon' => 'bi-circle']
-                                    };
-                                    ?>
-                                    <span class="badge <?= $badge['bg'] ?> <?= $badge['text'] ?> px-3 py-2 fw-semibold">
-                                        <i class="bi <?= $badge['icon'] ?> me-1"></i><?= $badge['label'] ?>
-                                    </span>
-                                </td>
-                                <td class="pe-4 text-end">
-                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#appDetailModal<?= $app['id'] ?>">
-                                        <i class="bi bi-info-circle me-1"></i>Details
-                                    </button>
+                        <?php foreach ($applications as $app):
+                            $pipelineSteps = ['applied', 'reviewing', 'shortlisted', 'hired'];
+                            $isRejected    = $app['status'] === 'rejected';
+                            $currentStepIdx = array_search($app['status'], $pipelineSteps);
 
-                                    <!-- Application Detail Modal -->
-                                    <div class="modal fade" id="appDetailModal<?= $app['id'] ?>" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered text-start">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title fw-bold"><?= htmlspecialchars($app['title']) ?></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <div class="fw-semibold text-muted small">Company</div>
-                                                        <div><?= htmlspecialchars($app['company']) ?> &mdash; <?= htmlspecialchars($app['location']) ?></div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <div class="fw-semibold text-muted small">Compensation</div>
-                                                        <div><?= htmlspecialchars($app['salary'] ?: 'Not specified') ?></div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <div class="fw-semibold text-muted small">Current Application Status</div>
-                                                        <div class="mt-1">
-                                                            <span class="badge <?= $badge['bg'] ?> <?= $badge['text'] ?> px-3 py-2">
-                                                                <i class="bi <?= $badge['icon'] ?> me-1"></i><?= $badge['label'] ?>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <?php if (!empty($app['cover_letter'])): ?>
-                                                        <div class="mb-3">
-                                                            <div class="fw-semibold text-muted small">Your Cover Letter / Note</div>
-                                                            <div class="p-2 bg-light rounded small mt-1"><?= nl2br(htmlspecialchars($app['cover_letter'])) ?></div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($app['recruiter_notes'])): ?>
-                                                        <div class="mb-3">
-                                                            <div class="fw-semibold text-muted small">Recruiter Updates / Notes</div>
-                                                            <div class="p-2 bg-warning-subtle text-warning-emphasis rounded small mt-1">
-                                                                <i class="bi bi-chat-quote-fill me-1"></i><?= nl2br(htmlspecialchars($app['recruiter_notes'])) ?>
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
+                            $badge = match($app['status']) {
+                                'applied'     => ['bg' => '#e0e7ff', 'text' => '#4338ca', 'icon' => 'bi-send', 'label' => 'Applied'],
+                                'reviewing'   => ['bg' => '#cffafe', 'text' => '#0e7490', 'icon' => 'bi-clock-history', 'label' => 'Reviewing'],
+                                'shortlisted' => ['bg' => '#fef3c7', 'text' => '#92400e', 'icon' => 'bi-star-fill', 'label' => 'Shortlisted'],
+                                'hired'       => ['bg' => '#d1fae5', 'text' => '#065f46', 'icon' => 'bi-check-circle-fill', 'label' => 'Hired'],
+                                'rejected'    => ['bg' => '#ffe4e6', 'text' => '#9f1239', 'icon' => 'bi-x-circle', 'label' => 'Not Selected'],
+                                default       => ['bg' => '#f1f5f9', 'text' => '#475569', 'icon' => 'bi-circle', 'label' => ucfirst($app['status'])]
+                            };
+
+                            $initials = avatarInitials($app['company']);
+                            $avClass  = avatarColorClass($app['company']);
+                            $typeBadgeClass = match(strtolower($app['job_type'])) {
+                                'internship' => 'badge-internship',
+                                'full-time'  => 'badge-fulltime',
+                                'part-time'  => 'badge-parttime',
+                                'remote'     => 'badge-remote',
+                                default      => 'badge-internship'
+                            };
+                        ?>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="company-avatar <?= $avClass ?>" style="width:40px;height:40px;font-size:.82rem;flex-shrink:0;">
+                                        <?= htmlspecialchars($initials) ?>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark" style="font-size:.95rem;"><?= htmlspecialchars($app['title']) ?></div>
+                                        <div class="text-muted" style="font-size:.78rem;">
+                                            <i class="bi bi-building me-1"></i><?= htmlspecialchars($app['company']) ?> &bull; <i class="bi bi-geo-alt me-1"></i><?= htmlspecialchars($app['location']) ?>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge job-type-badge <?= $typeBadgeClass ?>"><?= htmlspecialchars($app['job_type']) ?></span>
+                            </td>
+                            <td>
+                                <div class="text-muted" style="font-size:.8rem;">
+                                    <i class="bi bi-calendar3 me-1"></i><?= date('M d, Y', strtotime($app['applied_at'])) ?>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge px-3 py-1 fw-semibold" style="background:<?= $badge['bg'] ?>;color:<?= $badge['text'] ?>;font-size:.78rem;">
+                                    <i class="bi <?= $badge['icon'] ?> me-1"></i><?= $badge['label'] ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php if (!empty($app['resume_path'])): ?>
+                                    <a href="<?= $base_path . htmlspecialchars($app['resume_path']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary fw-semibold" style="font-size:.72rem;">
+                                        <i class="bi bi-file-earmark-pdf text-danger me-1"></i>Resume
+                                    </a>
+                                <?php else: ?>
+                                    <span class="text-muted small">None</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <button type="button" class="btn btn-sm btn-outline-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#appDetailModal<?= $app['id'] ?>" style="font-size:.78rem;">
+                                    <i class="bi bi-info-circle me-1"></i>Details
+                                </button>
+                            </td>
+                        </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Detail Modals with full pipeline stepper -->
+        <?php foreach ($applications as $app):
+            $pipelineSteps = ['applied', 'reviewing', 'shortlisted', 'hired'];
+            $isRejected    = $app['status'] === 'rejected';
+            $currentStepIdx = array_search($app['status'], $pipelineSteps);
+
+            $badge = match($app['status']) {
+                'applied'     => ['bg' => '#e0e7ff', 'text' => '#4338ca', 'icon' => 'bi-send', 'label' => 'Applied'],
+                'reviewing'   => ['bg' => '#cffafe', 'text' => '#0e7490', 'icon' => 'bi-clock-history', 'label' => 'Reviewing'],
+                'shortlisted' => ['bg' => '#fef3c7', 'text' => '#92400e', 'icon' => 'bi-star-fill', 'label' => 'Shortlisted'],
+                'hired'       => ['bg' => '#d1fae5', 'text' => '#065f46', 'icon' => 'bi-check-circle-fill', 'label' => 'Hired'],
+                'rejected'    => ['bg' => '#ffe4e6', 'text' => '#9f1239', 'icon' => 'bi-x-circle', 'label' => 'Not Selected'],
+                default       => ['bg' => '#f1f5f9', 'text' => '#475569', 'icon' => 'bi-circle', 'label' => ucfirst($app['status'])]
+            };
+        ?>
+        <div class="modal fade" id="appDetailModal<?= $app['id'] ?>" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0" style="border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold"><?= htmlspecialchars($app['title']) ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="text-muted" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Company</div>
+                                <div class="fw-semibold"><?= htmlspecialchars($app['company']) ?></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Location</div>
+                                <div class="fw-semibold"><?= htmlspecialchars($app['location']) ?></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Salary</div>
+                                <div class="fw-semibold"><?= htmlspecialchars($app['salary'] ?: 'Not specified') ?></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">Status</div>
+                                <span class="badge px-2 py-1 fw-semibold" style="background:<?= $badge['bg'] ?>;color:<?= $badge['text'] ?>;font-size:.75rem;">
+                                    <i class="bi <?= $badge['icon'] ?> me-1"></i><?= $badge['label'] ?>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Pipeline Stepper in Modal -->
+                        <?php if (!$isRejected): ?>
+                        <div class="mt-4 pt-3 border-top">
+                            <div class="text-muted mb-2" style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Application Progress</div>
+                            <div class="pipeline-stepper">
+                                <?php foreach ($pipelineSteps as $idx => $step):
+                                    $isDone   = $currentStepIdx !== false && $idx < $currentStepIdx;
+                                    $isActive = $currentStepIdx !== false && $idx === $currentStepIdx;
+                                    $cls = $isDone ? 'step-done' : ($isActive ? 'step-active' : '');
+                                ?>
+                                <div class="pipeline-step <?= $cls ?>">
+                                    <div class="step-dot">
+                                        <?= $isDone ? '<i class="bi bi-check2"></i>' : ($isActive ? '<i class="bi bi-circle-fill" style="font-size:.35rem;"></i>' : ($idx + 1)) ?>
+                                    </div>
+                                    <div class="step-label"><?= ucfirst($step) ?></div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($app['cover_letter'])): ?>
+                        <div class="mt-3 p-3 rounded-xl" style="background:var(--slate-50);border:1px solid var(--slate-200);">
+                            <div class="text-muted mb-1" style="font-size:.72rem;font-weight:700;text-transform:uppercase;">Your Cover Letter</div>
+                            <div style="font-size:.85rem;"><?= nl2br(htmlspecialchars($app['cover_letter'])) ?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($app['recruiter_notes'])): ?>
+                        <div class="mt-3 p-3 rounded-xl" style="background:#fef3c7;border:1px solid #fde68a;">
+                            <div class="text-muted mb-1" style="font-size:.72rem;font-weight:700;text-transform:uppercase;color:#92400e;">Recruiter Notes</div>
+                            <div style="font-size:.85rem;color:#78350f;">
+                                <i class="bi bi-chat-quote-fill me-1"></i><?= nl2br(htmlspecialchars($app['recruiter_notes'])) ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
     <?php endif; ?>
-</section>
+
+</div>
+
 <?php include '../includes/footer.php'; ?>

@@ -3,6 +3,20 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Global Avatar Helpers
+if (!function_exists('avatarColorClass')) {
+    function avatarColorClass(string $name): string {
+        return 'av-color-' . (abs(crc32($name)) % 8);
+    }
+}
+if (!function_exists('avatarInitials')) {
+    function avatarInitials(string $name): string {
+        $words = preg_split('/\s+/', trim($name));
+        if (count($words) >= 2) return strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+        return strtoupper(substr($name, 0, 2));
+    }
+}
+
 function require_student(string $redirect = '../login.php'): void {
     if (empty($_SESSION['user']) || $_SESSION['user']['role'] !== 'student') {
         flash('error', 'Please log in as a student to access this page.');

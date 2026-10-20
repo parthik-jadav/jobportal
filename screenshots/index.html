@@ -3,362 +3,658 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobPortal - Developer Screenshot Catalog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>JobPortal - Developer UI Showcase Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body { background: #f8fafc; color: #1e293b; }
-        .hero { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 3rem 0; }
-        .screenshot-card { border: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; border-radius: 0.75rem; overflow: hidden; background: white; }
-        .screenshot-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
-        .screenshot-card img { width: 100%; height: 260px; object-fit: cover; object-position: top; cursor: pointer; border-bottom: 1px solid #e2e8f0; }
-        .nav-pills .nav-link { font-weight: 600; color: #475569; }
-        .nav-pills .nav-link.active { background-color: #2563eb; color: white; }
+        :root {
+            --brand-primary: #4f46e5;
+            --brand-primary-dark: #4338ca;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0b0f19;
+            color: #f1f5f9;
+            padding-bottom: 60px;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            padding: 40px 24px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin: 0 auto 20px;
+        }
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(79, 70, 229, 0.2);
+            color: #c7d2fe;
+            border: 1px solid rgba(79, 70, 229, 0.4);
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 40px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--brand-primary);
+            padding-left: 12px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: #131b2e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(79, 70, 229, 0.15);
+        }
+        .thumb-wrapper {
+            position: relative;
+            background: #0f172a;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .thumb-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover .thumb-wrapper img {
+            transform: scale(1.03);
+        }
+        .card-body {
+            padding: 18px 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+        .card-desc {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            line-height: 1.45;
+            margin-bottom: 14px;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .btn-view {
+            color: #a5b4fc;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-view:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        /* Lightbox modal */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 9999;
+            backdrop-filter: blur(8px);
+            padding: 24px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #lightbox.active { display: flex; }
+        #lightbox img {
+            max-width: 95vw;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            object-fit: contain;
+        }
+        #lightbox-title {
+            color: #f1f5f9;
+            margin-top: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        #lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #ffffff;
+            font-size: 1.6rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #lightbox-close:hover { background: rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
 
-<header class="hero text-center mb-5">
+    <header class="header">
+        <h1>JobPortal UI/UX Design System Showcase</h1>
+        <p>Aura Talent UI &bull; 27 High-Fidelity Responsive SaaS Views Across Public, Student, Employer & Administrator Hubs</p>
+        <div class="badge-pill">
+            <i class="bi bi-patch-check-fill text-emerald-400"></i> All 36 E2E Tests Passing &bull; 27 Views Verified
+        </div>
+    </header>
+
     <div class="container">
-        <span class="badge bg-white text-primary px-3 py-1 mb-2 fw-bold">Visual Documentation</span>
-        <h1 class="display-6 fw-bold mb-2">JobPortal Developer Screenshot Catalog</h1>
-        <p class="lead mb-0 opacity-90" style="font-size: 1.1rem;">
-            Complete visual gallery of all 27 views across Public, Student, Employer, and Administrator portals.
-        </p>
+
+        <!-- 1. PUBLIC PAGES -->
+        <h2 class="section-title"><i class="bi bi-globe"></i> 1. Public Discovery & Access (7 Views)</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('01_public_home.png', 'Homepage - Mesh Glow Hero, Search Pill & Company Cards')">
+                    <img src="01_public_home.png" alt="Homepage" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Homepage Landing</div>
+                        <div class="card-desc">Mesh gradient hero, floating search pill, quick filter chips, live stats bar, and featured company avatar job cards.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>01_public_home.png</span>
+                        <a href="01_public_home.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('02_public_features.png', 'Features - Value Propositions by Role')">
+                    <img src="02_public_features.png" alt="Features" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Platform Features</div>
+                        <div class="card-desc">Three-tier breakdown for Students, Employers, and Administrators with feature badges and benefit checklists.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>02_public_features.png</span>
+                        <a href="02_public_features.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('03_public_about.png', 'About Us - Mission, Pillars & KPIs')">
+                    <img src="03_public_about.png" alt="About" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">About Us</div>
+                        <div class="card-desc">Core mission statement, platform pillar cards, and platform metrics summary.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>03_public_about.png</span>
+                        <a href="03_public_about.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('04_public_contact.png', 'Contact & Inquiries')">
+                    <img src="04_public_contact.png" alt="Contact" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Contact & Inquiries</div>
+                        <div class="card-desc">Two-column layout with direct contact channels and verified feedback intake form.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>04_public_contact.png</span>
+                        <a href="04_public_contact.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('05_public_login.png', 'Sign In')">
+                    <img src="05_public_login.png" alt="Login" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Unified Sign In</div>
+                        <div class="card-desc">Centered auth card with icon-prefixed inputs, quick role credentials helper, and validation styling.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>05_public_login.png</span>
+                        <a href="05_public_login.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('06_public_register_student_employer.png', 'Registration with Interactive Role Selector')">
+                    <img src="06_public_register_student_employer.png" alt="Register" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Registration Hub</div>
+                        <div class="card-desc">Interactive dual-card role selector (Student vs Recruiter) dynamically revealing employer organization fields.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>06_public_register_student_employer.png</span>
+                        <a href="06_public_register_student_employer.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('07_public_admin_login.png', 'Admin Portal Login')">
+                    <img src="07_public_admin_login.png" alt="Admin Login" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Admin Sign In</div>
+                        <div class="card-desc">Dark slate authentication portal with administrative security badge and quick demo filler.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>07_public_admin_login.png</span>
+                        <a href="07_public_admin_login.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. STUDENT PORTAL -->
+        <h2 class="section-title"><i class="bi bi-mortarboard"></i> 2. Student Candidate Hub (8 Views)</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('08_student_dashboard.png', 'Student Dashboard Overview')">
+                    <img src="08_student_dashboard.png" alt="Student Dashboard" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Student Dashboard</div>
+                        <div class="card-desc">Welcome hero banner, 4 colored KPI cards, live application stepper feed, and top recommended openings.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>08_student_dashboard.png</span>
+                        <a href="08_student_dashboard.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('09_student_jobs_catalog.png', 'Student Job Catalog & Filters')">
+                    <img src="09_student_jobs_catalog.png" alt="Jobs Catalog" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Browse Opportunities</div>
+                        <div class="card-desc">Horizontal filter bar with search keywords, job type, category, and sorting with company avatar cards.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>09_student_jobs_catalog.png</span>
+                        <a href="09_student_jobs_catalog.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('10_student_job_apply_modal.png', 'One-Click Job Application Modal')">
+                    <img src="10_student_job_apply_modal.png" alt="Apply Modal" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">One-Click Apply Modal</div>
+                        <div class="card-desc">Radio resume picker (profile resume vs new upload) and cover note submission dialog.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>10_student_job_apply_modal.png</span>
+                        <a href="10_student_job_apply_modal.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('11_student_applications.png', 'Application Tracker Table')">
+                    <img src="11_student_applications.png" alt="Applications" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Application Tracker Table</div>
+                        <div class="card-desc">Aura table with company avatars, job tags, status badges, resume links, and detail triggers.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>11_student_applications.png</span>
+                        <a href="11_student_applications.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('12_student_application_details_modal.png', 'Application Status Stepper Modal')">
+                    <img src="12_student_application_details_modal.png" alt="Application Details" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Application Pipeline Details</div>
+                        <div class="card-desc">Visual 4-step hiring pipeline stepper (Applied &rarr; Reviewing &rarr; Shortlisted &rarr; Hired) with recruiter notes.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>12_student_application_details_modal.png</span>
+                        <a href="12_student_application_details_modal.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('13_student_saved_jobs.png', 'Saved Jobs Bookmarks')">
+                    <img src="13_student_saved_jobs.png" alt="Saved Jobs" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Saved Opportunities</div>
+                        <div class="card-desc">Bookmarked opportunities with one-click removal and direct modal application.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>13_student_saved_jobs.png</span>
+                        <a href="13_student_saved_jobs.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('14_student_profile_resume.png', 'Student Profile & Resume')">
+                    <img src="14_student_profile_resume.png" alt="Profile" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Profile & Resume Management</div>
+                        <div class="card-desc">Dynamic completeness meter, avatar initials, skills tags, and default PDF resume upload.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>14_student_profile_resume.png</span>
+                        <a href="14_student_profile_resume.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('15_student_notifications.png', 'Notifications Timeline')">
+                    <img src="15_student_notifications.png" alt="Notifications" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Notifications Feed</div>
+                        <div class="card-desc">Timeline view of recruiter stage updates, interview alerts, and bulk mark-as-read controls.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>15_student_notifications.png</span>
+                        <a href="15_student_notifications.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. EMPLOYER PORTAL -->
+        <h2 class="section-title"><i class="bi bi-building"></i> 3. Employer & Recruiter Hub (6 Views)</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('16_employer_dashboard.png', 'Employer Dashboard & Candidate Activity')">
+                    <img src="16_employer_dashboard.png" alt="Employer Dashboard" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Employer Dashboard</div>
+                        <div class="card-desc">Company brand banner, 4 recruiter KPI cards, recent applicant list with avatars, and quick job posting shortcuts.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>16_employer_dashboard.png</span>
+                        <a href="16_employer_dashboard.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('17_employer_post_job.png', 'Post Job Opening')">
+                    <img src="17_employer_post_job.png" alt="Post Job" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Job Creation Form</div>
+                        <div class="card-desc">Sectioned form (Role Information, Compensation & Logistics, Details & Skills) with featured listing toggle.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>17_employer_post_job.png</span>
+                        <a href="17_employer_post_job.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('18_employer_manage_jobs.png', 'Manage Jobs Listings Table')">
+                    <img src="18_employer_manage_jobs.png" alt="Manage Jobs" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Manage Job Openings</div>
+                        <div class="card-desc">Aura table with status pills, real-time candidate count badges, quick Close/Reopen toggles, edit, and deletion.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>18_employer_manage_jobs.png</span>
+                        <a href="18_employer_manage_jobs.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('19_employer_edit_job.png', 'Edit Job Details')">
+                    <img src="19_employer_edit_job.png" alt="Edit Job" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Edit Job Opening</div>
+                        <div class="card-desc">Comprehensive modification form pre-populated with active parameters and requirements.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>19_employer_edit_job.png</span>
+                        <a href="19_employer_edit_job.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('20_employer_applicants_pipeline.png', 'Candidate Pipeline & Shortlisting')">
+                    <img src="20_employer_applicants_pipeline.png" alt="Candidate Pipeline" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Candidate Hiring Pipeline</div>
+                        <div class="card-desc">Two-column candidate evaluation cards: candidate details, skills, and resume preview alongside recruiter status updater & feedback notes.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>20_employer_applicants_pipeline.png</span>
+                        <a href="20_employer_applicants_pipeline.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('21_employer_profile.png', 'Company Profile Settings')">
+                    <img src="21_employer_profile.png" alt="Company Profile" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Company Profile Hub</div>
+                        <div class="card-desc">Recruiter organization identity, website link, company bio, and recruitment point of contact management.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>21_employer_profile.png</span>
+                        <a href="21_employer_profile.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. ADMINISTRATOR PORTAL -->
+        <h2 class="section-title"><i class="bi bi-shield-lock"></i> 4. Administrator Governance & Analytics (6 Views)</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('22_admin_dashboard.png', 'Administrator Dashboard Overview')">
+                    <img src="22_admin_dashboard.png" alt="Admin Dashboard" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Executive Admin Dashboard</div>
+                        <div class="card-desc">5 platform KPI cards, real-time application feed, quick user moderation table, and direct CSV export actions.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>22_admin_dashboard.png</span>
+                        <a href="22_admin_dashboard.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('23_admin_jobs_moderation.png', 'Global Job Listings Moderation')">
+                    <img src="23_admin_jobs_moderation.png" alt="Admin Jobs" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Global Job Moderation</div>
+                        <div class="card-desc">Moderation table with interactive star featured toggles, status pills, and direct employer listings oversight.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>23_admin_jobs_moderation.png</span>
+                        <a href="23_admin_jobs_moderation.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('24_admin_add_job_modal.png', 'Admin Quick Add Job Opening')">
+                    <img src="24_admin_add_job_modal.png" alt="Admin Add Job Modal" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Admin Quick Post Modal</div>
+                        <div class="card-desc">Modal dialog enabling administrators to assign and publish openings on behalf of verified employer accounts.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>24_admin_add_job_modal.png</span>
+                        <a href="24_admin_add_job_modal.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('25_admin_users_management.png', 'User Governance & Account Moderation')">
+                    <img src="25_admin_users_management.png" alt="Admin Users" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">User Account Governance</div>
+                        <div class="card-desc">User accounts table with role filter buttons (Students, Employers, Admins) and one-click account suspension/reactivation.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>25_admin_users_management.png</span>
+                        <a href="25_admin_users_management.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('26_admin_feedback_inbox.png', 'Feedback & Inquiry Inbox')">
+                    <img src="26_admin_feedback_inbox.png" alt="Admin Feedback" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Feedback & Inquiries Inbox</div>
+                        <div class="card-desc">Centralized repository of user inquiries submitted via the public contact portal.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>26_admin_feedback_inbox.png</span>
+                        <a href="26_admin_feedback_inbox.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumb-wrapper" onclick="openLightbox('27_admin_reports_analytics.png', 'Analytics Funnel & CSV Exports')">
+                    <img src="27_admin_reports_analytics.png" alt="Admin Reports" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Analytics & Data Exports</div>
+                        <div class="card-desc">Hiring pipeline conversion funnel progress bars, industry domain breakdown, and one-click Applications & Users CSV exports.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>27_admin_reports_analytics.png</span>
+                        <a href="27_admin_reports_analytics.png" target="_blank" class="btn-view">View Full <i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-</header>
 
-<main class="container pb-5">
-    <!-- Filter Navigation -->
-    <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="galleryTabs" role="tablist">
-        <li class="nav-item"><button class="nav-link active" data-filter="all"><i class="bi bi-grid me-1"></i>All Views (27)</button></li>
-        <li class="nav-item"><button class="nav-link" data-filter="public"><i class="bi bi-globe me-1"></i>Public (7)</button></li>
-        <li class="nav-item"><button class="nav-link" data-filter="student"><i class="bi bi-mortarboard me-1"></i>Student Portal (8)</button></li>
-        <li class="nav-item"><button class="nav-link" data-filter="employer"><i class="bi bi-building me-1"></i>Employer Portal (6)</button></li>
-        <li class="nav-item"><button class="nav-link" data-filter="admin"><i class="bi bi-shield-lock me-1"></i>Administrator (6)</button></li>
-    </ul>
-
-    <!-- Screenshots Grid -->
-    <div class="row g-4" id="galleryGrid">
-        <!-- 1. PUBLIC -->
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="public">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="01_public_home.png" target="_blank"><img src="01_public_home.png" alt="Homepage" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-secondary-subtle text-secondary align-self-start mb-2">01 &bull; Public</span>
-                    <h5 class="fw-bold mb-1 fs-6">Homepage Landing Page</h5>
-                    <p class="text-muted small mb-0">Hero banner, live KPI counters, quick search, and featured job opportunities.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="public">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="02_public_features.png" target="_blank"><img src="02_public_features.png" alt="Features" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-secondary-subtle text-secondary align-self-start mb-2">02 &bull; Public</span>
-                    <h5 class="fw-bold mb-1 fs-6">Features & Capabilities</h5>
-                    <p class="text-muted small mb-0">Detailed breakdown of platform capabilities for Students, Employers, and Admin.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="public">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="03_public_about.png" target="_blank"><img src="03_public_about.png" alt="About" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-secondary-subtle text-secondary align-self-start mb-2">03 &bull; Public</span>
-                    <h5 class="fw-bold mb-1 fs-6">About Page</h5>
-                    <p class="text-muted small mb-0">Mission statement and background about the recruitment platform.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="public">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="04_public_contact.png" target="_blank"><img src="04_public_contact.png" alt="Contact" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-secondary-subtle text-secondary align-self-start mb-2">04 &bull; Public</span>
-                    <h5 class="fw-bold mb-1 fs-6">Contact & Feedback Form</h5>
-                    <p class="text-muted small mb-0">Public inquiry submission form storing messages into the database.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="public">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="05_public_login.png" target="_blank"><img src="05_public_login.png" alt="Login" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-secondary-subtle text-secondary align-self-start mb-2">05 &bull; Public</span>
-                    <h5 class="fw-bold mb-1 fs-6">Unified Authentication Login</h5>
-                    <p class="text-muted small mb-0">Unified sign-in routing automatically to Student, Employer, or Admin dashboard.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="public">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="06_public_register_student_employer.png" target="_blank"><img src="06_public_register_student_employer.png" alt="Register" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-secondary-subtle text-secondary align-self-start mb-2">06 &bull; Public</span>
-                    <h5 class="fw-bold mb-1 fs-6">Dual-Role Registration</h5>
-                    <p class="text-muted small mb-0">Role selector toggle switching between Student and Employer with company details.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="public">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="07_public_admin_login.png" target="_blank"><img src="07_public_admin_login.png" alt="Admin Login" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-secondary-subtle text-secondary align-self-start mb-2">07 &bull; Public</span>
-                    <h5 class="fw-bold mb-1 fs-6">Administrator Portal Login</h5>
-                    <p class="text-muted small mb-0">Dedicated administrator access form with secure credential checks.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. STUDENT -->
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="08_student_dashboard.png" target="_blank"><img src="08_student_dashboard.png" alt="Student Dashboard" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">08 &bull; Student</span>
-                    <h5 class="fw-bold mb-1 fs-6">Student Dashboard</h5>
-                    <p class="text-muted small mb-0">KPI metrics, recent applications with status, and recommended opportunities.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="09_student_jobs_catalog.png" target="_blank"><img src="09_student_jobs_catalog.png" alt="Jobs Catalog" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">09 &bull; Student</span>
-                    <h5 class="fw-bold mb-1 fs-6">Job Search & Multi-Filters</h5>
-                    <p class="text-muted small mb-0">Search keywords, filter by job type, category, experience level, and sort options.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="10_student_job_apply_modal.png" target="_blank"><img src="10_student_job_apply_modal.png" alt="Apply Modal" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">10 &bull; Student (Modal)</span>
-                    <h5 class="fw-bold mb-1 fs-6">One-Click Application Modal</h5>
-                    <p class="text-muted small mb-0">Choose profile resume or upload tailored PDF/DOCX resume + optional cover letter.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="11_student_applications.png" target="_blank"><img src="11_student_applications.png" alt="Applications" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">11 &bull; Student</span>
-                    <h5 class="fw-bold mb-1 fs-6">My Applications Tracker</h5>
-                    <p class="text-muted small mb-0">Live status badges (Applied, Reviewing, Shortlisted, Hired), applied dates, and resume links.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="12_student_application_details_modal.png" target="_blank"><img src="12_student_application_details_modal.png" alt="Application Details" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">12 &bull; Student (Modal)</span>
-                    <h5 class="fw-bold mb-1 fs-6">Application Details & Recruiter Notes</h5>
-                    <p class="text-muted small mb-0">Detailed view displaying cover note and recruiter feedback / interview schedule notes.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="13_student_saved_jobs.png" target="_blank"><img src="13_student_saved_jobs.png" alt="Saved Jobs" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">13 &bull; Student</span>
-                    <h5 class="fw-bold mb-1 fs-6">Saved Opportunities</h5>
-                    <p class="text-muted small mb-0">Bookmarked openings with direct application triggers and removal controls.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="14_student_profile_resume.png" target="_blank"><img src="14_student_profile_resume.png" alt="Student Profile" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">14 &bull; Student</span>
-                    <h5 class="fw-bold mb-1 fs-6">Profile & Resume Management</h5>
-                    <p class="text-muted small mb-0">Education, skills, completeness score bar, and active PDF/DOCX resume on file.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="student">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="15_student_notifications.png" target="_blank"><img src="15_student_notifications.png" alt="Notifications" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-primary-subtle text-primary align-self-start mb-2">15 &bull; Student</span>
-                    <h5 class="fw-bold mb-1 fs-6">In-App Notification Center</h5>
-                    <p class="text-muted small mb-0">Real-time candidate notifications when recruiters update application status.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. EMPLOYER -->
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="employer">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="16_employer_dashboard.png" target="_blank"><img src="16_employer_dashboard.png" alt="Employer Dashboard" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-info-subtle text-info align-self-start mb-2">16 &bull; Employer</span>
-                    <h5 class="fw-bold mb-1 fs-6">Employer Recruiter Hub</h5>
-                    <p class="text-muted small mb-0">Active openings, candidate counts, shortlisted candidates, and recent applicants table.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="employer">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="17_employer_post_job.png" target="_blank"><img src="17_employer_post_job.png" alt="Post Job" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-info-subtle text-info align-self-start mb-2">17 &bull; Employer</span>
-                    <h5 class="fw-bold mb-1 fs-6">Post a New Job Opening</h5>
-                    <p class="text-muted small mb-0">Form with category, location, salary, experience, application deadline, and featured toggle.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="employer">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="18_employer_manage_jobs.png" target="_blank"><img src="18_employer_manage_jobs.png" alt="Manage Jobs" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-info-subtle text-info align-self-start mb-2">18 &bull; Employer</span>
-                    <h5 class="fw-bold mb-1 fs-6">Manage Job Listings</h5>
-                    <p class="text-muted small mb-0">Active/Closed status toggles, applicant counter badges, edit, and delete operations.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="employer">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="19_employer_edit_job.png" target="_blank"><img src="19_employer_edit_job.png" alt="Edit Job" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-info-subtle text-info align-self-start mb-2">19 &bull; Employer</span>
-                    <h5 class="fw-bold mb-1 fs-6">Edit Job Opening</h5>
-                    <p class="text-muted small mb-0">Edit active job requirements, modify deadline, adjust compensation, and update description.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="employer">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="20_employer_applicants_pipeline.png" target="_blank"><img src="20_employer_applicants_pipeline.png" alt="Candidate Pipeline" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-info-subtle text-info align-self-start mb-2">20 &bull; Employer</span>
-                    <h5 class="fw-bold mb-1 fs-6">Candidate Hiring Pipeline</h5>
-                    <p class="text-muted small mb-0">Filter candidates by job and status, preview/download resumes, and update hiring stage with notes.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="employer">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="21_employer_profile.png" target="_blank"><img src="21_employer_profile.png" alt="Company Profile" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-info-subtle text-info align-self-start mb-2">21 &bull; Employer</span>
-                    <h5 class="fw-bold mb-1 fs-6">Company Profile & Recruiter Contact</h5>
-                    <p class="text-muted small mb-0">Company name, website, about company description, and recruiter phone/email.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. ADMIN -->
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="admin">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="22_admin_dashboard.png" target="_blank"><img src="22_admin_dashboard.png" alt="Admin Dashboard" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-danger-subtle text-danger align-self-start mb-2">22 &bull; Admin</span>
-                    <h5 class="fw-bold mb-1 fs-6">Administrator Executive Dashboard</h5>
-                    <p class="text-muted small mb-0">System-wide KPIs across students, employers, jobs, applications, and recent listings.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="admin">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="23_admin_jobs_moderation.png" target="_blank"><img src="23_admin_jobs_moderation.png" alt="Jobs Moderation" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-danger-subtle text-danger align-self-start mb-2">23 &bull; Admin</span>
-                    <h5 class="fw-bold mb-1 fs-6">Global Job Moderation</h5>
-                    <p class="text-muted small mb-0">Moderate all postings across employers, feature jobs to homepage, and toggle active status.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="admin">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="24_admin_add_job_modal.png" target="_blank"><img src="24_admin_add_job_modal.png" alt="Admin Add Job Modal" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-danger-subtle text-danger align-self-start mb-2">24 &bull; Admin (Modal)</span>
-                    <h5 class="fw-bold mb-1 fs-6">Admin Add Job Modal</h5>
-                    <p class="text-muted small mb-0">System administrator direct job publication popup modal.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="admin">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="25_admin_users_management.png" target="_blank"><img src="25_admin_users_management.png" alt="Users Management" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-danger-subtle text-danger align-self-start mb-2">25 &bull; Admin</span>
-                    <h5 class="fw-bold mb-1 fs-6">User Accounts Governance</h5>
-                    <p class="text-muted small mb-0">Role filter tabs (Students, Employers, Admins), suspend/activate controls, and export.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="admin">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="26_admin_feedback_inbox.png" target="_blank"><img src="26_admin_feedback_inbox.png" alt="Feedback Inbox" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-danger-subtle text-danger align-self-start mb-2">26 &bull; Admin</span>
-                    <h5 class="fw-bold mb-1 fs-6">Inquiries & Feedback Inbox</h5>
-                    <p class="text-muted small mb-0">Messages submitted by public visitors and candidates with contact info.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 gallery-item" data-category="admin">
-            <div class="screenshot-card h-100 d-flex flex-column">
-                <a href="27_admin_reports_analytics.png" target="_blank"><img src="27_admin_reports_analytics.png" alt="Reports" loading="lazy"></a>
-                <div class="p-3 d-flex flex-column flex-grow-1">
-                    <span class="badge bg-danger-subtle text-danger align-self-start mb-2">27 &bull; Admin</span>
-                    <h5 class="fw-bold mb-1 fs-6">Reports, Funnels & CSV Exports</h5>
-                    <p class="text-muted small mb-0">Candidate hiring pipeline funnel, category breakdowns, and CSV export download buttons.</p>
-                </div>
-            </div>
-        </div>
+    <!-- Lightbox Modal -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <button id="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightbox-img" src="" alt="Enlarged screenshot">
+        <div id="lightbox-title"></div>
     </div>
-</main>
 
-<script>
-    document.querySelectorAll('#galleryTabs button').forEach(button => {
-        button.addEventListener('click', () => {
-            document.querySelectorAll('#galleryTabs button').forEach(b => b.classList.remove('active'));
-            button.classList.add('active');
-            const filter = button.getAttribute('data-filter');
-            document.querySelectorAll('.gallery-item').forEach(item => {
-                if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+    <script>
+        function openLightbox(src, title) {
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const tit = document.getElementById('lightbox-title');
+            img.src = src;
+            tit.textContent = title;
+            lb.classList.add('active');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
